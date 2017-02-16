@@ -15,25 +15,23 @@ import (
 // provides an extra metric for this. This metric is labeled with the
 // scrape result ("success" or "error").
 type NsqExecutor struct {
-	nsqdURL string
-
-	collectors []StatsCollector
-	summary    *prometheus.SummaryVec
-	mutex      sync.RWMutex
+	statsClient *nsqStatsClient
+	collectors  []StatsCollector
+	summary     *prometheus.SummaryVec
+	mutex       sync.RWMutex
 }
 
 // NewNsqExecutor creates a new executor for collecting NSQ metrics.
-func NewNsqExecutor(namespace, nsqdURL string) *NsqExecutor {
-	sum := prometheus.NewSummaryVec(prometheus.SummaryOpts{
+func NewNsqExecutor(namespace, nsqdURL string, timeout time.Duration) *NsqExecutor {
+	summary := prometheus.NewSummaryVec(prometheus.SummaryOpts{
 		Namespace: namespace,
 		Subsystem: "exporter",
 		Name:      "scrape_duration_seconds",
 		Help:      "Duration of a scrape job of the NSQ exporter",
 	}, []string{"result"})
-	prometheus.MustRegister(sum)
 	return &NsqExecutor{
-		nsqdURL: nsqdURL,
-		summary: sum,
+		statsClient: newNSQStatsClient(nsqdURL, timeout),
+		summary:     summary,
 	}
 }
 
@@ -47,6 +45,10 @@ func (e *NsqExecutor) Use(c StatsCollector) {
 
 // Describe implements the prometheus.Collector interface.
 func (e *NsqExecutor) Describe(ch chan<- *prometheus.Desc) {
+	e.summary.Describe(ch)
+
+	e.mutex.RLock()
+	defer e.mutex.RUnlock()
 	for _, c := range e.collectors {
 		c.describe(ch)
 	}
@@ -55,29 +57,32 @@ func (e *NsqExecutor) Describe(ch chan<- *prometheus.Desc) {
 // Collect implements the prometheus.Collector interface.
 func (e *NsqExecutor) Collect(out chan<- prometheus.Metric) {
 	start := time.Now()
-	e.mutex.Lock()
-	defer e.mutex.Unlock()
+
+	e.mutex.RLock()
+	collectors := make([]StatsCollector, len(e.collectors))
+	copy(collectors, e.collectors)
+	e.mutex.RUnlock()
 
 	// reset state, because metrics can gone
-	for _, c := range e.collectors {
+	for _, c := range collectors {
 		c.reset()
 	}
 
-	stats, err := getNsqdStats(e.nsqdURL)
-	tScrape := time.Since(start).Seconds()
-
 	result := "success"
+	stats, err := e.statsClient.getStats()
 	if err != nil {
 		result = "error"
 	}
 
+	tScrape := time.Since(start).Seconds()
+
 	e.summary.WithLabelValues(result).Observe(tScrape)
 
 	if err == nil {
-		for _, c := range e.collectors {
+		for _, c := range collectors {
 			c.set(stats)
 		}
-		for _, c := range e.collectors {
+		for _, c := range collectors {
 			c.collect(out)
 		}
 	}
