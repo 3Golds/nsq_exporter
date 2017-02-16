@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/timonwong/nsq_exporter/collector"
@@ -20,6 +21,7 @@ var (
 	metricsPath       = flag.String("web.path", "/metrics", "Path under which to expose metrics.")
 	nsqdURL           = flag.String("nsqd.addr", "http://localhost:4151/stats", "Address of the nsqd node.")
 	enabledCollectors = flag.String("collect", "stats.topics,stats.channels", "Comma-separated list of collectors to use.")
+	timeout           = flag.Duration("timeout", 5*time.Second, "Timeout for trying to get stats from nsqd.")
 	namespace         = flag.String("namespace", "nsq", "Namespace for the NSQ metrics.")
 
 	statsRegistry = map[string]func(namespace string) collector.StatsCollector{
@@ -59,13 +61,12 @@ func main() {
 }
 
 func createNsqExecutor() (*collector.NsqExecutor, error) {
-
 	nsqdURL, err := normalizeURL(*nsqdURL)
 	if err != nil {
 		return nil, err
 	}
 
-	ex := collector.NewNsqExecutor(*namespace, nsqdURL)
+	ex := collector.NewNsqExecutor(*namespace, nsqdURL, *timeout)
 	for _, param := range strings.Split(*enabledCollectors, ",") {
 		param = strings.TrimSpace(param)
 		parts := strings.SplitN(param, ".", 2)
