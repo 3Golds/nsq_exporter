@@ -3,6 +3,12 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "XFl7nlkh1EUa3RvYEsT8Q4O1Mvc=",
+			"path": "github.com/Sirupsen/logrus",
+			"revision": "7f4b1adc791766938c29457bed0703fb9134421a",
+			"revisionTime": "2017-02-15T16:43:24Z"
+		},
+		{
 			"checksumSHA1": "spyv5/YFBjYyZLZa1U2LBfDR8PM=",
 			"path": "github.com/beorn7/perks/quantile",
 			"revision": "4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9",
@@ -27,6 +33,12 @@
 			"revisionTime": "2017-01-25T12:09:23Z"
 		},
 		{
+			"checksumSHA1": "lG3//eDlwqA4IOuAPrNtLh9G0TA=",
+			"path": "github.com/prometheus/client_golang/prometheus/promhttp",
+			"revision": "9c2f7254672db910eb46f4764a9671987ff0f7b6",
+			"revisionTime": "2017-02-15T13:38:33Z"
+		},
+		{
 			"checksumSHA1": "DvwvOlPNAgRntBzt3b3OSRMS2N4=",
 			"path": "github.com/prometheus/client_model/go",
 			"revision": "fa8ad6fec33561be4280a8f0514318c79d7f6cb6",
@@ -45,8 +57,20 @@
 			"revisionTime": "2017-01-08T23:12:12Z"
 		},
 		{
+			"checksumSHA1": "ZA4MLHNAP905WiAOLy4BBzmcuxM=",
+			"path": "github.com/prometheus/common/log",
+			"revision": "dd2f054febf4a6c00f2343686efb775948a8bff4",
+			"revisionTime": "2017-01-08T23:12:12Z"
+		},
+		{
 			"checksumSHA1": "vopCLXHzYm+3l5fPKOf4/fQwrCM=",
 			"path": "github.com/prometheus/common/model",
+			"revision": "dd2f054febf4a6c00f2343686efb775948a8bff4",
+			"revisionTime": "2017-01-08T23:12:12Z"
+		},
+		{
+			"checksumSHA1": "91KYK0SpvkaMJJA2+BcxbVnyRO0=",
+			"path": "github.com/prometheus/common/version",
 			"revision": "dd2f054febf4a6c00f2343686efb775948a8bff4",
 			"revisionTime": "2017-01-08T23:12:12Z"
 		},
@@ -55,6 +79,30 @@
 			"path": "github.com/prometheus/procfs",
 			"revision": "1878d9fbb537119d24b21ca07effd591627cd160",
 			"revisionTime": "2017-01-28T16:01:23Z"
+		},
+		{
+			"checksumSHA1": "rTPzsn0jeqfgnQR0OsMKR8JRy5Y=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "e24f485414aeafb646f6fca458b0bf869c0880a1",
+			"revisionTime": "2017-02-11T02:03:03Z"
+		},
+		{
+			"checksumSHA1": "kQB2wRB3twjUp615F6zEwGHjNe0=",
+			"path": "golang.org/x/sys/windows",
+			"revision": "e24f485414aeafb646f6fca458b0bf869c0880a1",
+			"revisionTime": "2017-02-11T02:03:03Z"
+		},
+		{
+			"checksumSHA1": "ZdFZFaXmCgEEaEhVPkyXrnhKhsg=",
+			"path": "golang.org/x/sys/windows/registry",
+			"revision": "e24f485414aeafb646f6fca458b0bf869c0880a1",
+			"revisionTime": "2017-02-11T02:03:03Z"
+		},
+		{
+			"checksumSHA1": "uVlUSSKplihZG7N+QJ6fzDZ4Kh8=",
+			"path": "golang.org/x/sys/windows/svc/eventlog",
+			"revision": "e24f485414aeafb646f6fca458b0bf869c0880a1",
+			"revisionTime": "2017-02-11T02:03:03Z"
 		}
 	],
 	"rootPath": "github.com/timonwong/nsq_exporter"

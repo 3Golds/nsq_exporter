@@ -3,22 +3,23 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/prometheus/common/log"
+	"github.com/prometheus/common/version"
 	"github.com/timonwong/nsq_exporter/collector"
 )
 
-// Version of nsq_exporter. Set at build time.
-const Version = "0.0.0.dev"
-
 var (
-	listenAddress     = flag.String("web.listen", ":9117", "Address on which to expose metrics and web interface.")
-	metricsPath       = flag.String("web.path", "/metrics", "Path under which to expose metrics.")
+	showVersion       = flag.Bool("version", false, "Print version information.")
+	listenAddress     = flag.String("web.listen-address", ":9118", "Address on which to expose metrics and web interface.")
+	metricsPath       = flag.String("web.telemetry-path", "/metrics", "Path under which to expose metrics.")
 	nsqdURL           = flag.String("nsqd.addr", "http://localhost:4151/stats", "Address of the nsqd node.")
 	enabledCollectors = flag.String("collect", "stats.topics,stats.channels", "Comma-separated list of collectors to use.")
 	timeout           = flag.Duration("timeout", 5*time.Second, "Timeout for trying to get stats from nsqd.")
@@ -34,13 +35,18 @@ var (
 func main() {
 	flag.Parse()
 
+	if *showVersion {
+		fmt.Fprintf(os.Stdout, version.Print("nsq_exporter"))
+		os.Exit(0)
+	}
+
 	ex, err := createNsqExecutor()
 	if err != nil {
 		log.Fatalf("error creating nsq executor: %v", err)
 	}
 	prometheus.MustRegister(ex)
 
-	http.Handle(*metricsPath, prometheus.Handler())
+	http.Handle(*metricsPath, promhttp.Handler())
 	if *metricsPath != "" && *metricsPath != "/" {
 		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte(`<html>
@@ -53,7 +59,7 @@ func main() {
 		})
 	}
 
-	log.Print("listening to ", *listenAddress)
+	log.Info("listening to ", *listenAddress)
 	err = http.ListenAndServe(*listenAddress, nil)
 	if err != nil {
 		log.Fatal(err)
