@@ -8,9 +8,8 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/lovoo/nsq_exporter/collector"
-
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/timonwong/nsq_exporter/collector"
 )
 
 // Version of nsq_exporter. Set at build time.
