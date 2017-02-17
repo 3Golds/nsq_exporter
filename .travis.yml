@@ -2,7 +2,8 @@ sudo: false
 
 language: go
 go:
-  - 1.6.2
+  - 1.7.x
+  - tip
 
 script:
   - make build
