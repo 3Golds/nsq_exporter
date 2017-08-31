@@ -33,15 +33,21 @@ func newNSQStatsClient(nsqdURL string, timeout time.Duration) *nsqStatsClient {
 }
 
 func (c *nsqStatsClient) getStats() (*stats, error) {
-	resp, err := c.httpClient.Get(c.nsqdURL)
+	req, err := http.NewRequest("GET", c.nsqdURL, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Accept", "application/vnd.nsq; version=1.0")
+	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	var sr statsResponse
-	if err = json.NewDecoder(resp.Body).Decode(&sr); err != nil {
+	var statsData stats
+	if err = json.NewDecoder(resp.Body).Decode(&statsData); err != nil {
 		return nil, err
 	}
-	return &sr.Data, nil
+	return &statsData, nil
 }
