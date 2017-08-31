@@ -1,11 +1,5 @@
 package collector
 
-type statsResponse struct {
-	StatusCode int    `json:"status_code"`
-	StatusText string `json:"status_text"`
-	Data       stats  `json:"data"`
-}
-
 type stats struct {
 	Version   string   `json:"version"`
 	Health    string   `json:"health"`
