@@ -44,6 +44,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("error creating nsq executor: %v", err)
 	}
+	prometheus.MustRegister(version.NewCollector("nsq_exporter"))
 	prometheus.MustRegister(ex)
 
 	http.Handle(*metricsPath, promhttp.Handler())
