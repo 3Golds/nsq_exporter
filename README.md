@@ -25,14 +25,14 @@ make
 
 Name                                       | Description
 -------------------------------------------|--------------------------------------------------------------------------------------------------
-nsqd.addr                                  | Address of the nsqd node. (default "http://localhost:4151/stats")
-timeout                                    | Timeout for trying to get stats from nsqd. (default 5s)
-collect                                    | Comma-separated list of collectors to use (available choices: `stats.topics`, `stats.channels` and `stats.clients`). (default "stats.topics,stats.channels")
-namespace                                  | Namespace for the NSQ metrics. (default "nsq")
-log.level                                  | Logging verbosity. (default: info)
-web.listen-address                         | Address to listen on for web interface and telemetry. (default: ":9118")
-web.telemetry-path                         | Path under which to expose metrics.
-version                                    | Print the version information.
+--nsqd.addr                                | Address of the nsqd node. (default "http://localhost:4151/stats")
+--timeout                                  | Timeout for trying to get stats from nsqd. (default 5s)
+--collect                                  | Comma-separated list of collectors to use (available choices: `stats.topics`, `stats.channels` and `stats.clients`). (default "stats.topics,stats.channels")
+--namespace                                | Namespace for the NSQ metrics. (default "nsq")
+--log.level                                | Logging verbosity. (default: info)
+--web.listen-address                       | Address to listen on for web interface and telemetry. (default: ":9118")
+--web.telemetry-path                       | Path under which to expose metrics.
+--version                                  | Print the version information.
 
 ## Using Docker
 
